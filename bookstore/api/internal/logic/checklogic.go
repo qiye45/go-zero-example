@@ -24,7 +24,9 @@ func NewCheckLogic(ctx context.Context, svcCtx *svc.ServiceContext) *CheckLogic 
 }
 
 func (l *CheckLogic) Check(req *types.CheckReq) (resp *types.CheckResp, err error) {
-	// todo: add your logic here and delete this line
 
-	return
+	return &types.CheckResp{
+		Found: true,
+		Price: int64(len(req.Book)),
+	}, nil
 }
