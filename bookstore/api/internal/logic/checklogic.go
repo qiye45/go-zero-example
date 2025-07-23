@@ -1,6 +1,7 @@
 package logic
 
 import (
+	"bookstore/rpc/check/checker"
 	"context"
 
 	"bookstore/api/internal/svc"
@@ -24,9 +25,16 @@ func NewCheckLogic(ctx context.Context, svcCtx *svc.ServiceContext) *CheckLogic 
 }
 
 func (l *CheckLogic) Check(req *types.CheckReq) (resp *types.CheckResp, err error) {
+	r, err := l.svcCtx.Checker.Check(l.ctx, &checker.CheckReq{
+		Book: req.Book,
+	})
+	if err != nil {
+		logx.Error(err)
+		return &types.CheckResp{}, err
+	}
 
 	return &types.CheckResp{
-		Found: true,
-		Price: int64(len(req.Book)),
+		Found: r.Found,
+		Price: r.Price,
 	}, nil
 }
