@@ -1,29 +1,30 @@
-version: '3.8'
 services:
   api:
-    image: bookstore:latest
-    container_name: bookstore-api
-    command: ["./api_server", "-f", "api/etc/bookstore-api.yaml"]
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile.multi
+      target: api
+    image: bookstore-api
     ports:
       - "8888:8888"
-    volumes:
-      - ./api/etc:/app/api/etc
     depends_on:
       - add
       - check
+
   add:
-    image: bookstore:latest
-    container_name: bookstore-add
-    command: ["./add_rpc", "-f", "rpc/add/etc/add.yaml"]
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile.multi
+      target: add
+    image: bookstore-add
     ports:
       - "8081:8081"
-    volumes:
-      - ./rpc/add/etc:/app/rpc/add/etc
+
   check:
-    image: bookstore:latest
-    container_name: bookstore-check
-    command: ["./check_rpc", "-f", "rpc/check/etc/check.yaml"]
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile.multi
+      target: check
+    image: bookstore-check
     ports:
       - "8082:8082"
-    volumes:
-      - ./rpc/check/etc:/app/rpc/check/etc 

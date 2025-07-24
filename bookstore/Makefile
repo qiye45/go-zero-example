@@ -43,11 +43,15 @@ docker-run-check:
 
 .PHONY: compose-up
 compose-up:
-	docker compose -f deploy/docker-compose.yaml up -d
+	docker compose -f docker-compose.yaml up -d
+
+.PHONY: compose-up-build
+compose-up-build:
+	docker compose -f docker-compose.yaml up -d --build
 
 .PHONY: compose-down
 compose-down:
-	docker compose -f deploy/docker-compose.yaml down
+	docker compose -f docker-compose.yaml down
 
 .PHONY: helm-install
 helm-install:

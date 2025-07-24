@@ -1,0 +1,18 @@
+{{- range $svc, $cfg := dict "api" .Values.api "add" .Values.add "check" .Values.check }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bookstore-{{ $svc }}
+  labels:
+    app: bookstore-{{ $svc }}
+spec:
+  type: {{ $cfg.service.type }}
+  ports:
+    - port: {{ $cfg.service.port }}
+      targetPort: {{ $cfg.service.port }}
+      protocol: TCP
+      name: http
+  selector:
+    app: bookstore-{{ $svc }}
+{{- end }} 

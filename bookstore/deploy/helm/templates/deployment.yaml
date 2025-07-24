@@ -1,0 +1,45 @@
+{{- range $svc, $cfg := dict "api" .Values.api "add" .Values.add "check" .Values.check }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bookstore-{{ $svc }}
+  labels:
+    app: bookstore-{{ $svc }}
+spec:
+  replicas: {{ $cfg.replicaCount }}
+  selector:
+    matchLabels:
+      app: bookstore-{{ $svc }}
+  template:
+    metadata:
+      labels:
+        app: bookstore-{{ $svc }}
+    spec:
+      containers:
+        - name: {{ $svc }}
+          image: {{ $cfg.image }}
+          imagePullPolicy: IfNotPresent
+          command:
+            {{- if eq $svc "api" }}
+            - "./api_server"
+            - "-f"
+            - "api/etc/bookstore-api.yaml"
+            {{- else if eq $svc "add" }}
+            - "./add_rpc"
+            - "-f"
+            - "rpc/add/etc/add.yaml"
+            {{- else if eq $svc "check" }}
+            - "./check_rpc"
+            - "-f"
+            - "rpc/check/etc/check.yaml"
+            {{- end }}
+          volumeMounts:
+            - name: config
+              mountPath: /app/{{ $cfg.configPath }}
+      volumes:
+        - name: config
+          hostPath:
+            path: /app/{{ $cfg.configPath }}
+            type: DirectoryOrCreate
+{{- end }} 

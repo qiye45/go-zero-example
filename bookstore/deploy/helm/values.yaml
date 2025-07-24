@@ -1,0 +1,21 @@
+api:
+  image: bookstore:latest
+  replicaCount: 1
+  service:
+    type: ClusterIP
+    port: 8888
+  configPath: api/etc
+add:
+  image: bookstore:latest
+  replicaCount: 1
+  service:
+    type: ClusterIP
+    port: 8081
+  configPath: rpc/add/etc
+check:
+  image: bookstore:latest
+  replicaCount: 1
+  service:
+    type: ClusterIP
+    port: 8082
+  configPath: rpc/check/etc 
